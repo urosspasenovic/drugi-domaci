@@ -19,8 +19,8 @@ class GameFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->title(),
-            'price' => $this->faker->randomNumber(),
+            'name' => $this->faker->lastName(),
+            'price' => $this->faker->numberBetween(10,80),
             'user_id' => User::factory(),
             'genre_id' => Genre::factory(),
         ];

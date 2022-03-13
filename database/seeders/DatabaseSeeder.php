@@ -21,19 +21,22 @@ class DatabaseSeeder extends Seeder
         User::truncate();
         Game::truncate();
 
-        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $genre1 = Genre::factory()->create();
-        $genre2 = Genre::factory()->create();
-
-
+        $genre1 = Genre::create([
+             'name'=>'FPS',
+          ]);
+        $genre2 = Genre::create([
+              'name'=>'RPG',
+        ]);
         Game::factory(5)->create([
-            'user_id'=>$user->id,
+            'user_id'=>$user1->id,
             'genre_id'=>$genre1->id,
         ]);
 
         Game::factory(2)->create([
-            'user_id'=>$user->id,
+            'user_id'=>$user2->id,
             'genre_id'=>$genre2->id,
         ]);
         
