@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GameCollection;
+use App\Http\Resources\GameResource;
 use App\Models\Game;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
@@ -37,7 +40,23 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer|max:100',
+            'genre_id' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json($validator->errors());
+
+        $game = Game::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'genre_id' => $request->genre_id,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        return response()->json(['Game is created successfully.', new GameResource($game)]);
     }
 
     /**
@@ -74,7 +93,23 @@ class GameController extends Controller
      */
     public function update(Request $request, Game $game)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer|max:100',
+            'genre_id' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json($validator->errors());
+
+
+        $game->name = $request->name;
+        $game->price = $request->price;
+        $game->genre_id = $request->genre_id;
+
+        $game->save();
+
+        return response()->json(['Game is updated successfully.', new GameResource($game)]);
     }
 
     /**
@@ -85,6 +120,8 @@ class GameController extends Controller
      */
     public function destroy(Game $game)
     {
-        //
+        $game->delete();
+
+        return response()->json('Game is deleted successfully.');
     }
 }
